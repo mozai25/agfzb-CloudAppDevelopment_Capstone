@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        {% load static %}
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/css/bootstrap-datepicker.css" rel="stylesheet">
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.js"></script>
+    </head>
+    <body>
+        {% include "djangoapp/navigation.html" %}        
+        
+        <div style="margin-top: 50px;" class="container contact-con" id="contact-area">
+            <div class="row justify-content-center contact">
+                <div class="col-sm-4 col-md-4">
+                    <div class="title-blue">Mailing Address</div> 
+                        <strong>Cars HQ</strong>
+                        <p>
+                            250 Executive Dr<br /> 
+                            Suite J<br />
+                            Edgewood, NY 11717<br />
+                            tel: 0123456789
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </body>
+</html>
