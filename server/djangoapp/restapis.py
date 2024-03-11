@@ -8,6 +8,9 @@ from requests.auth import HTTPBasicAuth
 # e.g., response = requests.get(url, params=params, headers={'Content-Type': 'application/json'},
 #                                     auth=HTTPBasicAuth('apikey', api_key))
 
+#Rb-7vF0aa1a20R9RA0YSpHyvp2hZAheKxieZC3ga9qxu
+#https://api.eu-de.natural-language-understanding.watson.cloud.ibm.com/instances/be2668f0-31ab-43c7-b358-1734d02835ec
+
 def get_request(url, **kwargs):
     print(kwargs)
     print("GET from {} ".format(url))
