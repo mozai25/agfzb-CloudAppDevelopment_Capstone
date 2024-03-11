@@ -1,6 +1,6 @@
 import requests
 import json
-from .models import CarDealer
+from .models import CarDealer, DealerReview
 from requests.auth import HTTPBasicAuth
 
 
@@ -54,8 +54,6 @@ def get_dealers_from_cf(url, **kwargs):
             results.append(dealer_obj)
     return results
 
-
-# Create a get_dealer_reviews_from_cf method to get reviews by dealer id from a cloud function
 def get_dealer_by_id_from_cf(url, dealerId):
     results = []
     # Call get_request with a URL parameter
@@ -98,8 +96,36 @@ def get_dealer_by_state_from_cf(url, state):
             results.append(dealer_obj)
     return results
 
+# Create a get_dealer_reviews_from_cf method to get reviews by dealer id from a cloud function
 # - Call get_request() with specified arguments
 # - Parse JSON results into a DealerView object list
+def get_dealer_reviews_from_cf(url, dealerId):
+    results = []
+    # Call get_request with a URL parameter
+    json_result = get_request(url, id=dealerId)
+    if json_result:
+        # Get the row list in JSON as dealers
+        reviews = json_result
+        # For each dealer object
+        for review in reviews:
+            # Get its content in `doc` object
+            dealer_doc = review
+            print("REaler",dealer_doc)
+            dealer_obj = DealerReview(
+                dealership=dealer_doc["dealership"], 
+                name=dealer_doc["name"], 
+                purchase=dealer_doc["purchase"],
+                review=dealer_doc["review"], 
+                #purchase_date=dealer_doc["purchase_date"], 
+                #car_make=dealer_doc["car_make"],
+                #car_model=dealer_doc["car_model"],
+                #car_year=dealer_doc["car_year"], 
+                #sentiment='',
+                #id=dealer_doc["id"]
+            )
+            results.append(dealer_obj)
+    return results
+    return results
 
 
 
