@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
 # from .models import related models
-from .restapis import get_dealers_from_cf, get_dealer_by_id_from_cf, get_dealer_by_state_from_cf, get_dealer_reviews_from_cf
+from .restapis import get_dealers_from_cf, get_dealer_by_id_from_cf, get_dealer_by_state_from_cf, get_dealer_reviews_from_cf, analyze_review_sentiments
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
@@ -117,6 +117,14 @@ def get_dealer_reviews(request, dealer_id):
         dealer_names = ' '.join([dealer.review for dealer in dealerships])
         # Return a list of dealer short name
         return HttpResponse(dealer_names)
+
+def test_reviews(request):
+    if request.method == "GET":
+        url = "https://prolactin-5000.theianext-0-labs-prod-misc-tools-us-east-0.proxy.cognitiveclass.ai/api/get_reviews"
+        # Get dealers from the URL
+        sentiment=analyze_review_sentiments('this is good one')      
+        # Return a list of dealer short name
+        return HttpResponse(sentiment)
 
 # Create a `add_review` view to submit a review
 # def add_review(request, dealer_id):

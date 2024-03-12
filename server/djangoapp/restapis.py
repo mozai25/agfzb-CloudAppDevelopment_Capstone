@@ -11,6 +11,30 @@ from requests.auth import HTTPBasicAuth
 #Rb-7vF0aa1a20R9RA0YSpHyvp2hZAheKxieZC3ga9qxu
 #https://api.eu-de.natural-language-understanding.watson.cloud.ibm.com/instances/be2668f0-31ab-43c7-b358-1734d02835ec
 
+def get_watson_request(url, kwargs):
+    print(kwargs)
+    print("GET from {} ".format(url))
+    try:
+        # Call get method of requests library with URL and parameters
+        
+        params = dict()
+        params["text"] = kwargs["text"]
+        params["version"] = kwargs["version"]
+        params["features"] = kwargs["features"]
+        params["return_analyzed_text"] = kwargs["return_analyzed_text"]
+
+        response = requests.get(url, params=params, headers={'Content-Type': 'application/json'},
+                                auth=HTTPBasicAuth('apikey', 'Rb-7vF0aa1a20R9RA0YSpHyvp2hZAheKxieZC3ga9qxu'))
+    
+    except:
+        # If any error occurs
+        print("Network watson exception occurred")
+    status_code = response.status_code
+    print(response)
+    print("With status {} ".format(status_code))
+    json_data = json.loads(response.text)
+    return json_data
+
 def get_request(url, api_key, **kwargs):
     print(kwargs)
     print("GET from {} ".format(url))
@@ -18,12 +42,17 @@ def get_request(url, api_key, **kwargs):
         # Call get method of requests library with URL and parameters
         
         if api_key: 
-            requests.get(url, params=params, headers={'Content-Type': 'application/json'},
+            params = dict()
+            params["text"] = kwargs["text"]
+            params["version"] = kwargs["version"]
+            params["features"] = kwargs["features"]
+            params["return_analyzed_text"] = kwargs["return_analyzed_text"]
+
+            response = requests.get(url, params=params, headers={'Content-Type': 'application/json'},
                                     auth=HTTPBasicAuth('apikey', 'Rb-7vF0aa1a20R9RA0YSpHyvp2hZAheKxieZC3ga9qxu'))
         else:
             response = requests.get(url, headers={'Content-Type': 'application/json'},
-                                    params=kwargs)
-
+                                    params=params)
     except:
         # If any error occurs
         print("Network exception occurred")
@@ -45,7 +74,7 @@ def get_request(url, api_key, **kwargs):
 def get_dealers_from_cf(url, **kwargs):
     results = []
     # Call get_request with a URL parameter
-    json_result = get_request(url, false)
+    json_result = get_request(url, False)
     if json_result:
         # Get the row list in JSON as dealers
         dealers = json_result
@@ -66,7 +95,7 @@ def get_dealers_from_cf(url, **kwargs):
 def get_dealer_by_id_from_cf(url, dealerId):
     results = []
     # Call get_request with a URL parameter
-    json_result = get_request(url, false, dealerId=dealerId)
+    json_result = get_request(url, False, dealerId=dealerId)
     if json_result:
         # Get the row list in JSON as dealers
         dealers = json_result
@@ -87,7 +116,7 @@ def get_dealer_by_id_from_cf(url, dealerId):
 def get_dealer_by_state_from_cf(url, state):
     results = []
     # Call get_request with a URL parameter
-    json_result = get_request(url, false, state=state)
+    json_result = get_request(url, False, state=state)
     if json_result:
         # Get the row list in JSON as dealers
         dealers = json_result
@@ -111,7 +140,7 @@ def get_dealer_by_state_from_cf(url, state):
 def get_dealer_reviews_from_cf(url, dealerId):
     results = []
     # Call get_request with a URL parameter
-    json_result = get_request(url, false, id=dealerId)
+    json_result = get_request(url, False, id=dealerId)
     if json_result:
         # Get the row list in JSON as dealers
         reviews = json_result
@@ -124,20 +153,38 @@ def get_dealer_reviews_from_cf(url, dealerId):
                 dealership=dealer_doc["dealership"], 
                 name=dealer_doc["name"], 
                 purchase=dealer_doc["purchase"],
-                review=dealer_doc["review"], 
+                review=dealer_doc["review"],
+                sentiment= '' #analyze_review_sentiments(dealer_doc["review"]), 
+                
                 #purchase_date=dealer_doc["purchase_date"], 
                 #car_make=dealer_doc["car_make"],
                 #car_model=dealer_doc["car_model"],
                 #car_year=dealer_doc["car_year"], 
-                #sentiment='',
+                
                 #id=dealer_doc["id"]
             )
             results.append(dealer_obj)
     return results
-    return results
 
 # Create an `analyze_review_sentiments` method to call Watson NLU and analyze text
-# def analyze_review_sentiments(text):
+def analyze_review_sentiments(text):
+    url = "https://api.eu-de.natural-language-understanding.watson.cloud.ibm.com/instances/be2668f0-31ab-43c7-b358-1734d02835ec"
+    
+    params = dict()
+    params["text"] = text
+    params["version"] = "2022-04-07"
+    params["features"] = {
+        "sentiment": {
+            "targets": [
+                "car"
+            ]
+        }
+    }
+    params["return_analyzed_text"] = True
+    result = get_watson_request(url, params)
+
+    return result;
+
 # - Call get_request() with specified arguments
 # - Get the returned sentiment label such as Positive or Negative
 

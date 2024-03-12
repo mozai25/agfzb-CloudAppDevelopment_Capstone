@@ -23,6 +23,8 @@ urlpatterns = [
 
     # path for logout
     path('logout/', views.logout_request, name='logout'),
+
+    path('test_reviews/', views.test_reviews, name='test_reviews'),
     
     path(route='', view=views.get_dealerships, name='index'),
     
