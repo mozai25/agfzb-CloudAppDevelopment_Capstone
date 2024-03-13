@@ -133,6 +133,7 @@ def add_review(request, dealer_id):
     print('dealerid')
     print(dealer_id)
     context = {}
+    url_dealer = "https://prolactin-3000.theianext-0-labs-prod-misc-tools-us-east-0.proxy.cognitiveclass.ai/dealerships/get"
     url = "https://prolactin-5000.theianext-0-labs-prod-misc-tools-us-east-0.proxy.cognitiveclass.ai/api/post_review"
     if request.method == "POST":
         params = dict()
@@ -158,5 +159,7 @@ def add_review(request, dealer_id):
         context['dealerid'] = dealer_id
         return render(request, 'djangoapp/add_review.html', context)
     else:
+        dealerships = get_dealer_by_id_from_cf(url_dealer, dealer_id)
         context['dealerid'] = dealer_id
+        context['dealer'] = dealerships[0]
         return render(request, 'djangoapp/add_review.html', context)
