@@ -99,7 +99,7 @@ def get_dealers_from_cf(url, **kwargs):
 def get_dealer_by_id_from_cf(url, dealerId):
     results = []
     # Call get_request with a URL parameter
-    json_result = get_request(url, dealerId=dealerId)
+    json_result = get_request(url, id=dealerId)
     if json_result:
         # Get the row list in JSON as dealers
         dealers = json_result
@@ -159,11 +159,10 @@ def get_dealer_reviews_from_cf(url, dealerId):
                 purchase=dealer_doc["purchase"],
                 review=dealer_doc["review"],
                 sentiment= analyze_review_sentiments(dealer_doc["review"]), 
-                
                 #purchase_date=dealer_doc["purchase_date"], 
-                #car_make=dealer_doc["car_make"],
-                #car_model=dealer_doc["car_model"],
-                #car_year=dealer_doc["car_year"], 
+                car_make=dealer_doc["car_make"],
+                car_model=dealer_doc["car_model"],
+                car_year=dealer_doc["car_year"], 
                 #id=dealer_doc["id"]
             )
             results.append(dealer_obj)
@@ -179,7 +178,7 @@ def analyze_review_sentiments(text):
     params["features"] = "sentiment"
     params["return_analyzed_text"] = True
     result = get_watson_request(url, params)
-
+    print('Sentiment result', result);
     return result;
 
 # - Call get_request() with specified arguments

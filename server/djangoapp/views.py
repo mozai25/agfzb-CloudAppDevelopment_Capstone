@@ -76,6 +76,7 @@ def registration_request(request):
 
 # Update the `get_dealerships` view to render the index page with a list of dealerships
 def get_dealerships(request):
+    context = {}
     if request.method == "GET":
         dealerId = request.GET.get('dealerId', '')
         state = request.GET.get('state', '')
@@ -88,15 +89,16 @@ def get_dealerships(request):
             dealerships = get_dealer_by_state_from_cf(url, state)
         else:
             dealerships = get_dealers_from_cf(url)
-        
         # Concat all dealer's short name
         dealer_names = ' '.join([dealer.short_name for dealer in dealerships])
         # Return a list of dealer short name
-        return HttpResponse(dealer_names)
+        context['dealerships'] = dealerships
 
+        #return HttpResponse(dealer_names)
+        return render(request, 'djangoapp/index.html', context)
 
 # Create a `get_dealer_details` view to render the reviews of a dealer
-def get_dealer_details(request, dealer_id):
+def get_dealer_reviews(request, dealer_id):
     if request.method == "GET":
         url = "https://prolactin-3000.theianext-0-labs-prod-misc-tools-us-east-0.proxy.cognitiveclass.ai/dealerships/get"
         # Get dealers from the URL
@@ -106,16 +108,19 @@ def get_dealer_details(request, dealer_id):
         # Return a list of dealer short name
         return HttpResponse(dealer_names)
 
-def get_dealer_reviews(request, dealer_id):
+def get_dealer_details(request, dealer_id):
+    context = {}
     if request.method == "GET":
+        url_dealer = "https://prolactin-3000.theianext-0-labs-prod-misc-tools-us-east-0.proxy.cognitiveclass.ai/dealerships/get"
         url = "https://prolactin-5000.theianext-0-labs-prod-misc-tools-us-east-0.proxy.cognitiveclass.ai/api/get_reviews"
         # Get dealers from the URL
-        dealerships = get_dealer_reviews_from_cf(url, dealer_id)
-        print(dealerships)
-        # Concat all dealer's short name
-        dealer_names = ' '.join([dealer.review for dealer in dealerships])
-        # Return a list of dealer short name
-        return HttpResponse(dealer_names)
+        dealerships = get_dealer_by_id_from_cf(url_dealer, dealer_id)
+        reviews = get_dealer_reviews_from_cf(url, dealer_id)
+        print('Review single', dealerships[0].full_name)
+        context['dealer'] = dealerships[0]
+        context['reviews'] = reviews
+        context['dealerid'] = dealer_id
+        return render(request, 'djangoapp/dealer_details.html', context)
 
 def test_reviews(request):
     if request.method == "GET":

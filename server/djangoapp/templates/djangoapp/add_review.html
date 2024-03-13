@@ -13,7 +13,7 @@
     <body>
         {% include "djangoapp/navigation.html" %}
         <!--Add review form here -->
-
+        
         <form action="{% url 'djangoapp:add_review' dealer_id=dealerid %}" method="post">
             {% csrf_token %}
             <div class="container"> <!--Stylize root div with .container class -->
@@ -29,7 +29,9 @@
                     {{ message }}
                 </div>
                 {% endif %}
+                {% if user.is_authenticated %}
                 <button class="btn btn-primary" type="submit">Submit</button> <!--Stylize button with .btn and .btn-primary class -->
+                {% endif %}
             </div>
         </form>
 
