@@ -13,7 +13,6 @@ import json
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
-
 # Create your views here.
 
 # Create an `about` view to render a static about page
@@ -121,9 +120,7 @@ def get_dealer_reviews(request, dealer_id):
 def test_reviews(request):
     if request.method == "GET":
         url = "https://prolactin-5000.theianext-0-labs-prod-misc-tools-us-east-0.proxy.cognitiveclass.ai/api/get_reviews"
-        # Get dealers from the URL
-        sentiment=analyze_review_sentiments('this is good one')      
-        # Return a list of dealer short name
+        sentiment = analyze_review_sentiments('This is a great car dealer')      
         return HttpResponse(sentiment)
 
 # Create a `add_review` view to submit a review
