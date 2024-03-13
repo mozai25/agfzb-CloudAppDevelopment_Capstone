@@ -24,15 +24,14 @@ urlpatterns = [
     # path for logout
     path('logout/', views.logout_request, name='logout'),
 
-    path('test_reviews/', views.test_reviews, name='test_reviews'),
-    
     path(route='', view=views.get_dealerships, name='index'),
     
     # path for dealer reviews view
     path('dealer/<int:dealer_id>/', views.get_dealer_reviews, name='dealer_reviews'),
-
     path('review/<int:dealer_id>/', views.get_dealer_reviews, name='review'),
+    path('test_reviews/', views.test_reviews, name='test_reviews'),
 
     # path for add a review view
+    path('add_review/<int:dealer_id>/', views.add_review, name='add_review'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

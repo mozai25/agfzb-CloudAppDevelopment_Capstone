@@ -12,6 +12,27 @@
 </head>
     <body>
         {% include "djangoapp/navigation.html" %}
-    <!--Add review form here -->
+        <!--Add review form here -->
+
+        <form action="{% url 'djangoapp:add_review' dealer_id=dealerid %}" method="post">
+            {% csrf_token %}
+            <div class="container"> <!--Stylize root div with .container class -->
+                <h1>Add review</h1>
+                <div class="form-group"> <!--Stylize second div with .form-group class -->
+                    <label for="name"><b>Name: </b></label>
+                    <input id="name" class="form-control" type="text" placeholder="Enter Name: " name="name" required> <!--Stylize input with .form-control class -->
+                    <label for="review"><b>Review: </b></label>
+                    <textarea  id="review" class="form-control" placeholder="Enter Review: " name="review" required></textarea> <!--Stylize input with .form-control class -->
+                </div>
+                {% if message %}
+                <div class="alert alert-warning"> <!--Stylize the message paragraph with .alert and .alert-warning class -->
+                    {{ message }}
+                </div>
+                {% endif %}
+                <button class="btn btn-primary" type="submit">Submit</button> <!--Stylize button with .btn and .btn-primary class -->
+            </div>
+        </form>
+
+
     </body>
 </html>

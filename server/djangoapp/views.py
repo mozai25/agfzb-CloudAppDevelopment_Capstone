@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
 # from .models import related models
-from .restapis import get_dealers_from_cf, get_dealer_by_id_from_cf, get_dealer_by_state_from_cf, get_dealer_reviews_from_cf, analyze_review_sentiments
+from .restapis import post_request, get_dealers_from_cf, get_dealer_by_id_from_cf, get_dealer_by_state_from_cf, get_dealer_reviews_from_cf, analyze_review_sentiments
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
@@ -124,6 +124,34 @@ def test_reviews(request):
         return HttpResponse(sentiment)
 
 # Create a `add_review` view to submit a review
-# def add_review(request, dealer_id):
-# ...
+def add_review(request, dealer_id):
+    print('dealerid')
+    print(dealer_id)
+    context = {}
+    url = "https://prolactin-5000.theianext-0-labs-prod-misc-tools-us-east-0.proxy.cognitiveclass.ai/api/post_review"
+    if request.method == "POST":
+        params = dict()
+        params["id"] = 1115
+        params["name"] = request.POST['name']
+        params["dealership"] = dealer_id
+        params["review"] = request.POST['review']
+        params["purchase"] = True
+        params["another"] = "field"
+        params["purchase_date"] = "02/16/2021"
+        params["car_make"] = "Audi"
+        params["car_model"] = "Car"
+        params["car_year"] = 2021
 
+        json_payload = dict()
+        json_payload["review"] = params
+
+        response = post_request(url, params, dealerId=dealer_id)
+
+        print(response);
+
+        context['message'] = "Review added successuly!"
+        context['dealerid'] = dealer_id
+        return render(request, 'djangoapp/add_review.html', context)
+    else:
+        context['dealerid'] = dealer_id
+        return render(request, 'djangoapp/add_review.html', context)

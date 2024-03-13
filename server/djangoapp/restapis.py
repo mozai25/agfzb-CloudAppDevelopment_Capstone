@@ -11,6 +11,21 @@ from requests.auth import HTTPBasicAuth
 #Rb-7vF0aa1a20R9RA0YSpHyvp2hZAheKxieZC3ga9qxu
 #https://api.eu-de.natural-language-understanding.watson.cloud.ibm.com/instances/be2668f0-31ab-43c7-b358-1734d02835ec
 
+def post_request(url, json_payload, **kwargs):
+    print(kwargs)
+    print("POST to {} ".format(url))
+    try:
+        response = requests.post(url, params=kwargs, json=json_payload)
+        print("ReviewResponse", json_payload)
+        print("TestResponse", response)
+    except:
+        # If any error occurs
+        print("Network exception occurred")
+        status_code = response
+        print("With status {} ".format(status_code))
+        #json_data = json.loads(response.text)
+    return {}
+
 def get_watson_request(url, kwargs):
     print(kwargs)
     print("GET from {} ".format(url))
