@@ -14,6 +14,12 @@
         {% include "djangoapp/navigation.html" %}
         <!--Add review form here -->
 
+        <script type="text/javascript">
+            $('.date-own').datepicker({
+               format: 'mm/dd/yyyy'
+             });
+       </script>
+
         <form action="{% url 'djangoapp:add_review' dealer_id=dealerid %}" method="post">
             {% csrf_token %}
             <div class="container"> <!--Stylize root div with .container class -->
@@ -23,8 +29,18 @@
                     <input id="name" class="form-control" type="text" placeholder="Enter Name: " name="name" required> <!--Stylize input with .form-control class -->
                     <label for="review"><b>Review: </b></label>
                     <textarea id="review" class="form-control" placeholder="Enter Review: " name="review" required></textarea> <!--Stylize input with .form-control class -->
-                    <input class="form-check-input" type="checkbox" name="purchasecheck" id="purchasecheck" />
-                    has purchased the car from {{dealer.full_name}}
+                    <div style="margin-left: 30px;">
+                        <input class="form-check-input" type="checkbox" name="purchasecheck" id="purchasecheck" />
+                        has purchased the car from {{dealer.full_name}}
+                    </div>
+                    <br />
+                    Select your car(model-make-year)  <select name="car" id="car" class="form-select" required>
+                    {% for car in cars %}
+                        <option selected value={{car.id}}>{{car.name}}-{{car.make.name}}-{{ car.year|date:"Y" }}</option>
+                    {% endfor %}
+                    </select>
+                    <br /><br />
+                    <input class="date-own form-control" type="text" name="purchasedate" id="purchasedate" />
                 </div>
                 {% if message %}
                 <div class="alert alert-warning"> <!--Stylize the message paragraph with .alert and .alert-warning class -->

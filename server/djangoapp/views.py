@@ -7,6 +7,7 @@ from .restapis import post_request, get_dealers_from_cf, get_dealer_by_id_from_c
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
+from .models import CarModel
 import logging
 import json
 
@@ -136,6 +137,10 @@ def add_review(request, dealer_id):
     url_dealer = "https://prolactin-3000.theianext-0-labs-prod-misc-tools-us-east-0.proxy.cognitiveclass.ai/dealerships/get"
     url = "https://prolactin-5000.theianext-0-labs-prod-misc-tools-us-east-0.proxy.cognitiveclass.ai/api/post_review"
     if request.method == "POST":
+
+        car = CarModel.objects.filter(id=request.POST['car'])[0]
+        print('POSTCAR', car);
+
         params = dict()
         params["id"] = 1115
         params["name"] = request.POST['name']
@@ -144,9 +149,9 @@ def add_review(request, dealer_id):
         params["purchase"] = True
         params["another"] = "field"
         params["purchase_date"] = "02/16/2021"
-        params["car_make"] = "Audi"
-        params["car_model"] = "Car"
-        params["car_year"] = 2021
+        params["car_make"] = car.make.name
+        params["car_model"] = car.name
+        params["car_year"] = 2021 #request.POST['purchasedate'] #
 
         json_payload = dict()
         json_payload["review"] = params
@@ -155,11 +160,17 @@ def add_review(request, dealer_id):
 
         print(response);
 
-        context['message'] = "Review added successuly!"
-        context['dealerid'] = dealer_id
-        return render(request, 'djangoapp/add_review.html', context)
-    else:
+        carList = CarModel.objects.filter(dealerId=dealer_id);
         dealerships = get_dealer_by_id_from_cf(url_dealer, dealer_id)
         context['dealerid'] = dealer_id
         context['dealer'] = dealerships[0]
+        context['message'] = "Review added successuly!"
+        context['cars'] = carList
+        return render(request, 'djangoapp/add_review.html', context)
+    else:
+        carList = CarModel.objects.filter(dealerId=dealer_id);
+        dealerships = get_dealer_by_id_from_cf(url_dealer, dealer_id)
+        context['dealerid'] = dealer_id
+        context['dealer'] = dealerships[0]
+        context['cars'] = carList
         return render(request, 'djangoapp/add_review.html', context)
